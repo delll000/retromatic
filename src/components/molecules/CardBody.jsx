@@ -6,6 +6,13 @@ function CardBody({ title }) {
       {title}
     </Text>
   )
-}
+
+
+
+
+
+
+
+                      }
 
 export default CardBody

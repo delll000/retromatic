@@ -18,12 +18,12 @@ function NavBar() {
             <Nav className="me-auto">
               <Nav.Link href="/catalogo">Catálogo</Nav.Link>
               <Nav.Link href="/nosotros">Nosotros</Nav.Link>
-              <Nav.Link href="/contacto">Contacto</Nav.Link>
+              <Nav.Link href="/contact">Contacto</Nav.Link>
             </Nav>
 
             <Nav>
-              <Nav.Link href="/carrito">
-                <i className="material-icons">shopping_cart</i>
+              <Nav.Link href="/cart" className="d-flex align-items-center">
+                <i className="bi bi-cart" style={{ fontSize: "22px" }}></i>
               </Nav.Link>
               <Nav.Link href="/login">Login</Nav.Link>
             </Nav>
