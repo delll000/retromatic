@@ -62,7 +62,7 @@ const Login = () => {
           {
             ...item.text[0],
             content: (
-              <Link to="/create-user" className="text-decoration-underline">
+              <Link to="/register" className="text-decoration-underline">
                 Crear usuario
               </Link>
             ),

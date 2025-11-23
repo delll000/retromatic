@@ -4,45 +4,21 @@ import ProductCard from '../../components/organisms/ProductCard'
 
 //este de aca es un placeholder
 import products from '../../data/products'
-
+import RetroCarousel from '../../components/organisms/RetroCarousel'
+import homeCarouselItems from '../../data/homeCarouselItems'
 function Home() {
   return (
     <main>
       <section className="py-5 bg-light">
         <Container>
-          <Carousel className="home-carousel">
-
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/img/portadas/juegos/minecraft.webp"
-                alt="portadaMinecraft"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/public/img/portadas/juegos/gowRagnarok.webp"
-                alt="portadaGoW"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/public/img/portadas/juegos/mgs2.webp"
-                alt="portadaMGS2"
-              />
-            </Carousel.Item>
-            <Carousel.Item>
-              <img
-                className="d-block w-100"
-                src="/public/img/portadas/juegos/silksong.webp"
-                alt="portadaSilksong"
-              />
-            </Carousel.Item>
-          </Carousel>
+          <RetroCarousel 
+            items={homeCarouselItems} 
+            className="home-carousel" 
+          />
         </Container>
       </section>
+
+
 
       <section className="py-4 bg-success text-center">
         <Container>

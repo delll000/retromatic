@@ -19,13 +19,13 @@ function Footer() {
                 </a>
               </li>
               <li className="mb-1">
-                <a href="/nosotros" className="text-white text-decoration-none">
+                <a href="/us" className="text-white text-decoration-none">
                   Nosotros
                 </a>
               </li>
               <li className="mb-1">
                 <a
-                  href="/contacto"
+                  href="/contact"
                   className="text-white text-decoration-none"
                 >
                   Contacto

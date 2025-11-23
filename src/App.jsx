@@ -9,6 +9,8 @@ import JuegosAdmin from './pages/admin/JuegosAdmin.jsx';
 import Contact from './pages/user/Contact.jsx';
 import Login from './pages/auth/Login.jsx';
 import Cart from './pages/user/Cart.jsx';
+import Us from './pages/user/Us.jsx';
+import Register from './pages/user/Register.jsx';
 
 
 
@@ -23,6 +25,8 @@ function App() {
         <Route path="/contact" element={<Contact />} /> 
         <Route path="/login" element={<Login />} /> 
         <Route path="/cart" element={<Cart />} />
+        <Route path="/us" element={<Us />} />
+        <Route path="/register" element={<Register />} />         
         {/* Admin */}
         <Route path="/admin" element={<HomeAdmin />} />
         <Route path="/admin/juegos" element={<JuegosAdmin />} />

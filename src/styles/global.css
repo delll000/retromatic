@@ -129,3 +129,55 @@ p, span, li, a {
   height: 140px;
   object-fit: cover;  
 }
+
+
+#Registro{
+    background-color:azure;
+    margin: 25px;
+    padding: 20px;
+    border-radius: 20px;
+    width: auto;
+    height: auto;
+}
+
+#form-registro{
+    background-color:rgb(238, 238, 238);
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: auto;
+    height: auto;
+}
+
+#btn_registro{
+    background-color: rgb(21, 100, 202);
+    color: rgb(255, 255, 255);
+    box-shadow: 0 4px 8px rgba(32, 32, 32, 0.1);
+    border-radius: 5px;
+}
+
+#texto{
+    color:rgba(153, 151, 151, 0.884);
+}
+
+
+#Fondo_Us{
+    background-attachment: fixed;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: auto;
+    height: auto;
+    max-width: 99%;
+    max-height: 99%;
+}
+
+#F{
+    background-color:rgb(80, 161, 80);
+}
+
+#C{
+    background-color:rgb(80, 161, 80);
+    border-radius: 5px;
+    margin: 20px;
+}

@@ -12,7 +12,6 @@ function CardBody({ title }) {
 
 
 
-
-                      }
+          }
 
 export default CardBody
