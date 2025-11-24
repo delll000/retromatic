@@ -1,12 +1,24 @@
 import { Container, Row, Col, Carousel } from 'react-bootstrap'
 import Button from '../../components/atoms/Button'
 import ProductCard from '../../components/organisms/ProductCard'
-
-//este de aca es un placeholder
-import products from '../../data/products'
 import RetroCarousel from '../../components/organisms/RetroCarousel'
 import homeCarouselItems from '../../data/homeCarouselItems'
+import { useState, useEffect } from 'react';
+
+const API_URL = 'https://backend-retromatic.onrender.com/v1/api/juegos';
+
 function Home() {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    fetch(API_URL)
+      .then(res => res.json())
+      .then(data => {
+        setProducts(data.slice(0, 3));
+      })
+      .catch(err => console.log('Error al cargar productos del home:', err));
+  }, []);
+  
   return (
     <main>
       <section className="py-5 bg-light">

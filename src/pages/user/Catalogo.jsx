@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Container, Row, Col, Form, Button as BsButton, Modal } from 'react-bootstrap'
 import CatalogProductCard from '../../components/organisms/CatalogProductCard'
-import mockProducts from '../../data/mockProducts'
+
+const API_URL = 'https://backend-retromatic.onrender.com/v1/api'
 
 function Catalogo() {
+  const [allProducts, setAllProducts] = useState([])
   const [products, setProducts] = useState([])
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
@@ -11,9 +13,53 @@ function Catalogo() {
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [quantity, setQuantity] = useState(1)
   const [showModal, setShowModal] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+   useEffect(() => {
+    const fetchGames = async () => {
+      setLoading(true)
+      setError(null)
+
+      try {
+        const response = await fetch(`${API_URL}/juegos`)
+        if (!response.ok) {
+          throw new Error('No se pudieron cargar los juegos')
+        }
+
+        const data = await response.json()
+
+        const mapped = data.map((juego) => ({
+          id: juego.id,
+          nombre: juego.titulo,
+          descripcion: juego.descripcion,
+          precio: juego.precio,
+          imagen: juego.urlPortada,
+          categoria:
+            juego.categorias && juego.categorias.length > 0
+              ? juego.categorias[0].nombre
+              : 'Sin categoría',
+          plataforma:
+            juego.plataformas && juego.plataformas.length > 0
+              ? juego.plataformas[0].nombre
+              : 'Sin plataforma',
+        }))
+
+        setAllProducts(mapped)
+        setProducts(mapped)
+      } catch (err) {
+        console.error(err)
+        setError(err.message)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchGames()
+  }, [])
 
   useEffect(() => {
-    let result = mockProducts
+    let result = [...allProducts]
 
     if (search.trim() !== '') {
       const term = search.toLowerCase()
@@ -29,8 +75,7 @@ function Catalogo() {
     }
 
     setProducts(result)
-
-  }, [search, category, platform])
+  }, [search, category, platform, allProducts])
 
   const handleOpenModal = (product) => {
     setSelectedProduct(product)
@@ -70,6 +115,9 @@ function Catalogo() {
       <section className="py-5">
         <Container>
           <h2 className="mb-4 text-center">Catálogo de Videojuegos</h2>
+
+          {loading && <p className="text-center">Cargando juegos...</p>}
+          {error && <p className="text-center text-danger">{error}</p>}
 
           <Form className="mb-4">
             <Row className="g-3 align-items-end">
@@ -130,6 +178,12 @@ function Catalogo() {
                 />
               </Col>
             ))}
+
+            {!loading && !error && products.length === 0 && (
+              <p className="text-center mt-4">
+                No se encontraron juegos.
+              </p>
+            )}
           </Row>
         </Container>
       </section>

@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Forms from "../../components/templates/LoginForm";
 import loginData from "./Data/LoginData";
+
+const API_URL = "https://backend-retromatic.onrender.com/v1/api";
 
 const Login = () => {
   const [form, setForm] = useState({ correo: "", contrasena: "" });
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.correo || !form.contrasena) {
@@ -19,14 +22,35 @@ const Login = () => {
       return;
     }
 
-    setLoading(true);
+    try {
+      setLoading(true);
 
-    console.log("Datos de login:", form);
+      const response = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          correo: form.correo,
+          contrasenna: form.contrasena,
+        }),
+      });
 
-    setTimeout(() => {
+      if (!response.ok) {
+        const msg = await response.text();
+        alert(msg || "Credenciales incorrectas");
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem("user", JSON.stringify(data));
+
+      navigate("/");
+
+    } catch (error) {
+      alert("Error de conexión con el servidor.");
+    } finally {
       setLoading(false);
-      setForm({ correo: "", contrasena: "" });
-    }, 800);
+    }
   };
 
   const formDataWithHandlers = loginData.map((item, index) => {
@@ -51,10 +75,7 @@ const Login = () => {
       };
     }
 
-    if (
-      item.type === "text" &&
-      item.text[0]?.content === "create-user-link"
-    ) {
+    if (item.type === "text" && item.text[0]?.content === "create-user-link") {
       return {
         ...item,
         key: index,
