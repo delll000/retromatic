@@ -1,4 +1,4 @@
-/*import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col } from 'react-bootstrap'
 import Button from '../../components/atoms/Button'
 
 function HomeAdmin() {
@@ -61,4 +61,3 @@ function HomeAdmin() {
 }
 
 export default HomeAdmin
-*/
