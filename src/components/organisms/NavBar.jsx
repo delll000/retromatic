@@ -7,7 +7,7 @@ function NavBar() {
         <Container>
           <Navbar.Brand href="/">
             <img
-              src="public\Logo3.webp"
+              src="/Logo3.webp"
               alt="Retromatic Logo"
               style={{ height: '50px' }}
             />
