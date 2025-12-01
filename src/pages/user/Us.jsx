@@ -10,7 +10,7 @@ function Us() {
       <div className="p-5 mt-5">
         <div className="text-center justify-content-center">
           <Image
-            src="public\img\logo\Logo3.webp"
+            src="public\Logo3.webp"
             id="imagenes"
           />
 
