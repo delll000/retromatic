@@ -10,8 +10,9 @@ function Us() {
       <div className="p-5 mt-5">
         <div className="text-center justify-content-center">
           <Image
-            src="public\Logo3.webp"
-            id="imagenes"
+            src="/Logo3.webp"
+            alt="Logo Retromatic"
+            className="d-block mx-auto img-fluid us-logo"
           />
 
           <Card className="mt-3 p-2" id="Fondo_Us">

@@ -181,3 +181,6 @@ p, span, li, a {
     border-radius: 5px;
     margin: 20px;
 }
+.us-logo {
+  max-width: 220px;
+}
