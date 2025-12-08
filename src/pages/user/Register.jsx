@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import Image from "../../components/atoms/Image";
-import RegisterForm from "../../components/organisms/RegisterForm";
+import RegisterForm from "../../components/templates/RegisterForm";
 
 function Register() {
   return (
@@ -11,7 +11,7 @@ function Register() {
       <div className="p-4 mt-5" style={{ maxWidth: "600px", width: "100%" }}>
         <div className="text-center mb-4">
           <Image
-            src="public\img\logo\Logo3.webp"
+            src="/img/logo/Logo3.webp"
             alt="Retromatic Logo"
             className="img-fluid mb-3"
             style={{ maxWidth: "140px" }}

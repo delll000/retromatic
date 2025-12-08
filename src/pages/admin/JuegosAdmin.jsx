@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import { Container, Row, Col, Table, Form } from "react-bootstrap";
 import Button from "../../components/atoms/Button";
 import GameModal from "../../components/organisms/GameModal";
 
-const API_URL = "https://backend-retromatic.onrender.com/v1/api/juegos";
+const API_URL = "https://backend-retromatic.onrender.com/v1/api";
 
 function JuegosAdmin() {
   const [juegos, setJuegos] = useState([]);
@@ -13,16 +13,36 @@ function JuegosAdmin() {
   const [modo, setModo] = useState("crear");
   const [juegoEditando, setJuegoEditando] = useState(null);
   const [guardando, setGuardando] = useState(false);
-
   const [eliminandoId, setEliminandoId] = useState(null);
 
-  // cargar juegos
+  const [searchTitulo, setSearchTitulo] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
+  const [filtroPlataforma, setFiltroPlataforma] = useState("");
+  const [categoriaOptions, setCategoriaOptions] = useState([]);
+  const [plataformaOptions, setPlataformaOptions] = useState([]);
+
   useEffect(() => {
     const cargar = async () => {
       try {
-        const res = await fetch(API_URL);
+        const res = await fetch(`${API_URL}/juegos`);
         const data = await res.json();
         setJuegos(data);
+
+        const categoriasSet = new Set();
+        const plataformasSet = new Set();
+
+        data.forEach((j) => {
+          (j.categorias || []).forEach((rel) => {
+            if (rel.categoria?.nombre) categoriasSet.add(rel.categoria.nombre);
+          });
+          (j.plataformas || []).forEach((rel) => {
+            if (rel.plataforma?.nombre)
+              plataformasSet.add(rel.plataforma.nombre);
+          });
+        });
+
+        setCategoriaOptions([...categoriasSet]);
+        setPlataformaOptions([...plataformasSet]);
       } catch (e) {
         alert("Error al cargar juegos");
       } finally {
@@ -58,32 +78,26 @@ function JuegosAdmin() {
 
     setGuardando(true);
 
-    let categorias = [];
-    if (form.categoriaIds.trim() !== "") {
-      categorias = form.categoriaIds
-        .split(",")
-        .map((n) => Number(n.trim()))
-        .filter((n) => !isNaN(n));
-    }
-
     const body = {
       titulo: form.titulo,
       descripcion: form.descripcion,
       precio: Number(form.precio),
       urlPortada: form.urlPortada,
-      clasificacionId: 1,
-      categoriaIds: categorias,
-      plataformaIds: [],
-      modalidadIds: [],
-      companiaIds: [],
+      clasificacionId: form.clasificacionId
+        ? Number(form.clasificacionId)
+        : null,
+      categoriaIds: form.categoriaIds || [],
+      plataformaIds: form.plataformaIds || [],
+      modalidadIds: form.modalidadIds || [],
+      companiaIds: form.companiaIds || [],
     };
 
     try {
-      let url = API_URL;
+      let url = `${API_URL}/juegos`;
       let method = "POST";
 
       if (modo === "editar" && juegoEditando) {
-        url = `${API_URL}/${juegoEditando.id}`;
+        url = `${API_URL}/juegos/${juegoEditando.id}`;
         method = "PUT";
       }
 
@@ -93,19 +107,32 @@ function JuegosAdmin() {
         body: JSON.stringify(body),
       });
 
-      const data = await res.json();
+      if (!res.ok) {
+        const msg = await res.text();
+        alert(msg || "Error al guardar");
+        return;
+      }
 
-      // actualizar la listaaa
-      if (modo === "crear") {
+      let data = null;
+
+      try {
+        data = await res.json();
+      } catch {
+        data = null;
+      }
+
+      if (modo === "crear" && data) {
         setJuegos([...juegos, data]);
-      } else {
+      } else if (modo === "editar") {
         setJuegos(
-          juegos.map((j) => (j.id === juegoEditando.id ? { ...j, ...data } : j))
+          juegos.map((j) =>
+            j.id === juegoEditando.id ? { ...j, ...(data || body) } : j
+          )
         );
       }
 
       cerrarModal();
-    } catch (e) {
+    } catch {
       alert("Error al guardar");
     } finally {
       setGuardando(false);
@@ -118,7 +145,12 @@ function JuegosAdmin() {
     setEliminandoId(id);
 
     try {
-      await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/juegos/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const msg = await res.text();
+        alert(msg || "Error al eliminar");
+        return;
+      }
       setJuegos(juegos.filter((j) => j.id !== id));
     } catch (e) {
       alert("Error al eliminar");
@@ -127,15 +159,90 @@ function JuegosAdmin() {
     }
   };
 
+  const juegosFiltrados = juegos.filter((j) => {
+    const tituloMatch = j.titulo
+      .toLowerCase()
+      .includes(searchTitulo.toLowerCase());
+
+    const categoriaMatch = filtroCategoria
+      ? (j.categorias || []).some(
+          (rel) => rel.categoria?.nombre === filtroCategoria
+        )
+      : true;
+
+    const plataformaMatch = filtroPlataforma
+      ? (j.plataformas || []).some(
+          (rel) => rel.plataforma?.nombre === filtroPlataforma
+        )
+      : true;
+
+    return tituloMatch && categoriaMatch && plataformaMatch;
+  });
+
   return (
     <main className="py-5 bg-light">
       <Container>
         <header className="d-flex justify-content-between mb-4">
-          <h1 className="h3">Gestión de juegos</h1>
+          <div>
+            <h1 className="h3 mb-1">Gestión de juegos</h1>
+            <p className="text-muted mb-0">
+              Listado y administración de juegos.
+            </p>
+          </div>
           <Button variant="success" onClick={abrirCrear}>
             Crear juego
           </Button>
         </header>
+
+        <Form className="mb-4">
+          <Row className="g-3">
+            <Col xs={12} md={4}>
+              <Form.Group controlId="searchTitulo">
+                <Form.Label>Buscar por título</Form.Label>
+                <Form.Control
+                  type="text"
+                  placeholder="Buscar..."
+                  value={searchTitulo}
+                  onChange={(e) => setSearchTitulo(e.target.value)}
+                />
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={4}>
+              <Form.Group controlId="filtroCategoria">
+                <Form.Label>Categoría</Form.Label>
+                <Form.Select
+                  value={filtroCategoria}
+                  onChange={(e) => setFiltroCategoria(e.target.value)}
+                >
+                  <option value="">Todas</option>
+                  {categoriaOptions.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+
+            <Col xs={12} md={4}>
+              <Form.Group controlId="filtroPlataforma">
+                <Form.Label>Plataforma</Form.Label>
+                <Form.Select
+                  value={filtroPlataforma}
+                  onChange={(e) => setFiltroPlataforma(e.target.value)}
+                >
+                  <option value="">Todas</option>
+                  {plataformaOptions.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </Form.Select>
+              </Form.Group>
+            </Col>
+          </Row>
+        </Form>
 
         {cargando && <p>Cargando...</p>}
 
@@ -153,15 +260,15 @@ function JuegosAdmin() {
               </thead>
 
               <tbody>
-                {!cargando && juegos.length === 0 && (
+                {!cargando && juegosFiltrados.length === 0 && (
                   <tr>
                     <td colSpan={5} className="text-center">
-                      No hay juegos registrados.
+                      No hay juegos que coincidan con los filtros.
                     </td>
                   </tr>
                 )}
 
-                {juegos.map((j) => (
+                {juegosFiltrados.map((j) => (
                   <tr key={j.id}>
                     <td>{j.id}</td>
                     <td>{j.titulo}</td>

@@ -42,10 +42,14 @@ const Login = () => {
       }
 
       const data = await response.json();
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem("usuarioRetromatic", JSON.stringify(data));
 
-      navigate("/");
-    } catch (error) {
+      if (data.rol === "ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
+    } catch {
       alert("Error de conexión con el servidor.");
     } finally {
       setLoading(false);

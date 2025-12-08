@@ -1,5 +1,5 @@
-import Button from '../atoms/Button';
-import Text from '../atoms/Text';
+import Button from "../atoms/Button";
+import Text from "../atoms/Text";
 
 function CartSummary({ subtotal, envio, total, onPay }) {
   return (
@@ -23,11 +23,7 @@ function CartSummary({ subtotal, envio, total, onPay }) {
         Proceder al pago
       </Button>
 
-      <Button
-        variant="link"
-        className="w-100"
-        href="/catalogo"
-      >
+      <Button variant="link" className="w-100" href="/catalogo">
         Seguir comprando
       </Button>
     </div>

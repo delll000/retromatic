@@ -34,16 +34,76 @@ function RegisterForm() {
       return;
     }
 
+    const fd = new FormData(form);
+
+    const correo = (fd.get("correo") || "").trim();
+    const correo2 = (fd.get("correo2") || "").trim();
+    const contrasenna = fd.get("contrasena") || "";
+    const contrasenna2 = fd.get("contrasena2") || "";
+
+    const errores = [];
+
+    if (
+      correo === "" ||
+      correo.length > 100 ||
+      !(
+        correo.endsWith("@duoc.cl") ||
+        correo.endsWith("@profesor.duoc.cl") ||
+        correo.endsWith("@gmail.com")
+      )
+    ) {
+      errores.push(
+        "Ingrese un correo válido. Debe terminar en @duoc.cl / @profesor.duoc.cl / @gmail.com"
+      );
+    }
+
+    if (correo !== correo2) {
+      errores.push("Ambos correos deben ser idénticos para confirmar");
+    }
+
+    if (
+      contrasenna === "" ||
+      contrasenna.length < 4 ||
+      contrasenna.length > 10
+    ) {
+      errores.push("La contraseña debe tener entre 4 y 10 caracteres");
+    }
+
+    if (contrasenna !== contrasenna2) {
+      errores.push("Las contraseñas deben ser idénticas para confirmarse");
+    }
+
+    if (!fd.get("regionId")) {
+      errores.push("Selecciona una región");
+    }
+
+    if (!fd.get("comunaId")) {
+      errores.push("Selecciona una comuna");
+    }
+
+    if (
+      !fd.get("nombre") ||
+      !fd.get("apellido") ||
+      !fd.get("direccion") ||
+      !fd.get("telefono")
+    ) {
+      errores.push("Completa todos los campos obligatorios");
+    }
+
+    if (errores.length > 0) {
+      alert(errores.join("\n"));
+      setValidated(true);
+      return;
+    }
+
     setValidated(true);
     setLoading(true);
-
-    const fd = new FormData(form);
 
     const body = {
       nombre: fd.get("nombre"),
       apellido: fd.get("apellido"),
-      correo: fd.get("correo"),
-      contrasenna: fd.get("contrasena"),
+      correo: correo,
+      contrasenna: contrasenna,
       regionId: Number(fd.get("regionId")),
       comunaId: Number(fd.get("comunaId")),
       direccion: fd.get("direccion"),
@@ -63,6 +123,7 @@ function RegisterForm() {
         alert("Cuenta creada correctamente.");
         form.reset();
         setValidated(false);
+        setRegionSeleccionada("");
       }
     } catch {
       alert("Error de conexión con el servidor.");
@@ -120,6 +181,21 @@ function RegisterForm() {
               Ingresa un correo válido.
             </Form.Control.Feedback>
           </InputGroup>
+        </Form.Group>
+      </Row>
+
+      <Row className="mb-3">
+        <Form.Group as={Col} md="12">
+          <Form.Label>Confirmar email</Form.Label>
+          <Form.Control
+            required
+            type="email"
+            placeholder="Repite tu correo"
+            name="correo2"
+          />
+          <Form.Control.Feedback type="invalid">
+            Confirma tu correo.
+          </Form.Control.Feedback>
         </Form.Group>
       </Row>
 
@@ -203,6 +279,21 @@ function RegisterForm() {
           />
           <Form.Control.Feedback type="invalid">
             Ingresa un teléfono válido.
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+
+      <Row className="mb-3">
+        <Form.Group as={Col} md="6">
+          <Form.Label>Confirmar contraseña</Form.Label>
+          <Form.Control
+            required
+            type="password"
+            placeholder="Repite tu contraseña"
+            name="contrasena2"
+          />
+          <Form.Control.Feedback type="invalid">
+            Confirma tu contraseña.
           </Form.Control.Feedback>
         </Form.Group>
       </Row>

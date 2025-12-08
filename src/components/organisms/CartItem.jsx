@@ -4,20 +4,20 @@ import CartItemInfo from "../molecules/CartItemInfo";
 import Button from "../atoms/Button";
 
 function CartItem({ item, index, onQuantityChange, onRemove }) {
+  const nombre = item.juego?.titulo || "";
+  const imagen = item.juego?.urlPortada || "";
+  const precio = item.precio;
+
   return (
     <Card className="mb-3 cart-item-card">
       <Card.Body className="d-flex">
         <div className="me-3 cart-item-image-wrapper">
-          <Image
-            src={item.imagen}
-            alt={item.nombre}
-            className="cart-item-image"
-          />
+          <Image src={imagen} alt={nombre} className="cart-item-image" />
         </div>
 
         <div className="flex-grow-1 d-flex flex-column justify-content-between">
           <div>
-            <CartItemInfo name={item.nombre} price={item.precio} />
+            <CartItemInfo name={nombre} price={precio} />
           </div>
 
           <div className="d-flex align-items-center justify-content-between mt-2">

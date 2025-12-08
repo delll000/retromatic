@@ -7,6 +7,7 @@ import {
   Button as BsButton,
   Modal,
 } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import CatalogProductCard from "../../components/organisms/CatalogProductCard";
 
 const API_URL = "https://backend-retromatic.onrender.com/v1/api";
@@ -17,6 +18,7 @@ function Catalogo() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [platform, setPlatform] = useState("");
+  const [sortPrice, setSortPrice] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [showModal, setShowModal] = useState(false);
@@ -24,6 +26,7 @@ function Catalogo() {
   const [error, setError] = useState(null);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [platformOptions, setPlatformOptions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,13 +43,23 @@ function Catalogo() {
           descripcion: j.descripcion,
           precio: j.precio,
           imagen: j.urlPortada,
-
           categorias: (j.categorias || [])
             .map((rel) => rel.categoria?.nombre)
             .filter(Boolean),
-
           plataformas: (j.plataformas || [])
             .map((rel) => rel.plataforma?.nombre)
+            .filter(Boolean),
+          clasificacion: j.clasificacion
+            ? {
+                codigo: j.clasificacion.codigo,
+                edadMinima: j.clasificacion.edadMinima,
+              }
+            : null,
+          modalidades: (j.modalidades || [])
+            .map((rel) => rel.modalidad?.nombre)
+            .filter(Boolean),
+          companias: (j.compannias || [])
+            .map((rel) => rel.compannia?.nombre)
             .filter(Boolean),
         }));
 
@@ -60,7 +73,7 @@ function Catalogo() {
         const plSet = new Set();
         mapped.forEach((j) => j.plataformas.forEach((p) => plSet.add(p)));
         setPlatformOptions([...plSet]);
-      } catch (e) {
+      } catch {
         setError("No se pudieron cargar los datos");
       } finally {
         setLoading(false);
@@ -86,8 +99,14 @@ function Catalogo() {
       result = result.filter((p) => p.plataformas.includes(platform));
     }
 
+    if (sortPrice === "asc") {
+      result = [...result].sort((a, b) => a.precio - b.precio);
+    } else if (sortPrice === "desc") {
+      result = [...result].sort((a, b) => b.precio - a.precio);
+    }
+
     setProducts(result);
-  }, [search, category, platform, allProducts]);
+  }, [search, category, platform, sortPrice, allProducts]);
 
   const handleOpenModal = (product) => {
     setSelectedProduct(product);
@@ -100,26 +119,43 @@ function Catalogo() {
     setSelectedProduct(null);
   };
 
-  const handleAddToCart = () => {
-    const stored = JSON.parse(
-      localStorage.getItem("carritoRetromatic") || "[]"
-    );
-    const existing = stored.find((i) => i.id === selectedProduct.id);
+  const handleAddToCart = async () => {
+    if (!selectedProduct) return;
 
-    if (existing) {
-      existing.cantidad += quantity;
-    } else {
-      stored.push({
-        id: selectedProduct.id,
-        nombre: selectedProduct.nombre,
-        precio: selectedProduct.precio,
-        imagen: selectedProduct.imagen,
-        cantidad: quantity,
-      });
+    const guardado = localStorage.getItem("usuarioRetromatic");
+    if (!guardado) {
+      navigate("/login");
+      return;
     }
 
-    localStorage.setItem("carritoRetromatic", JSON.stringify(stored));
-    handleCloseModal();
+    let user;
+    try {
+      user = JSON.parse(guardado);
+    } catch {
+      localStorage.removeItem("usuarioRetromatic");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      for (let i = 0; i < quantity; i++) {
+        const response = await fetch(
+          `${API_URL}/ventas/carrito/${user.id}/agregar/${selectedProduct.id}`,
+          { method: "POST" }
+        );
+
+        if (!response.ok) {
+          const msg = await response.text();
+          alert(msg || "No se pudo agregar al carrito.");
+          return;
+        }
+      }
+
+      alert("Juego agregado al carrito.");
+      handleCloseModal();
+    } catch {
+      alert("Error al agregar al carrito.");
+    }
   };
 
   return (
@@ -133,7 +169,7 @@ function Catalogo() {
 
           <Form className="mb-4">
             <Row className="g-3 align-items-end">
-              <Col xs={12} md={6}>
+              <Col xs={12} md={4}>
                 <Form.Group controlId="search">
                   <Form.Label>Buscar juego</Form.Label>
                   <Form.Control
@@ -175,6 +211,20 @@ function Catalogo() {
                         {p}
                       </option>
                     ))}
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+
+              <Col xs={12} md={2}>
+                <Form.Group controlId="ordenPrecio">
+                  <Form.Label>Ordenar por</Form.Label>
+                  <Form.Select
+                    value={sortPrice}
+                    onChange={(e) => setSortPrice(e.target.value)}
+                  >
+                    <option value="">Sin orden</option>
+                    <option value="asc">Precio menor a mayor</option>
+                    <option value="desc">Precio mayor a menor</option>
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -220,17 +270,40 @@ function Catalogo() {
                   <p className="fw-bold">${selectedProduct.precio}</p>
 
                   <p>
-                    <strong>Categorías:</strong>
+                    <strong>Clasificación:</strong>{" "}
+                    {selectedProduct.clasificacion
+                      ? `${selectedProduct.clasificacion.codigo} (${selectedProduct.clasificacion.edadMinima}+)`
+                      : "Sin clasificación"}
+                  </p>
+
+                  <p>
+                    <strong>Categorías:</strong>{" "}
                     {selectedProduct.categorias.length > 0
                       ? selectedProduct.categorias.join(", ")
                       : "Sin categoría"}
                   </p>
 
                   <p>
-                    <strong>Plataformas:</strong>
+                    <strong>Plataformas:</strong>{" "}
                     {selectedProduct.plataformas.length > 0
                       ? selectedProduct.plataformas.join(", ")
                       : "Sin plataforma"}
+                  </p>
+
+                  <p>
+                    <strong>Modalidades:</strong>{" "}
+                    {selectedProduct.modalidades &&
+                    selectedProduct.modalidades.length > 0
+                      ? selectedProduct.modalidades.join(", ")
+                      : "Sin modalidades"}
+                  </p>
+
+                  <p>
+                    <strong>Compañías:</strong>{" "}
+                    {selectedProduct.companias &&
+                    selectedProduct.companias.length > 0
+                      ? selectedProduct.companias.join(", ")
+                      : "Sin compañías"}
                   </p>
 
                   <Form.Group controlId="cantidad">

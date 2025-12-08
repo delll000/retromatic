@@ -1,5 +1,4 @@
-import React from "react";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 
 function NavBar() {
@@ -7,7 +6,7 @@ function NavBar() {
   const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    const guardado = localStorage.getItem("user");
+    const guardado = localStorage.getItem("usuarioRetromatic");
     if (guardado) {
       try {
         setUser(JSON.parse(guardado));
@@ -18,7 +17,7 @@ function NavBar() {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("usuarioRetromatic");
     setUser(null);
     window.location.href = "/";
   };
@@ -73,7 +72,7 @@ function NavBar() {
                         padding: "8px 0",
                         boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                         zIndex: 50,
-                        minWidth: "150px",
+                        minWidth: "170px",
                       }}
                     >
                       {user.rol === "ADMIN" && (
