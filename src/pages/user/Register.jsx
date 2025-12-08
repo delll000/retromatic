@@ -4,9 +4,11 @@ import RegisterForm from "../../components/organisms/RegisterForm";
 
 function Register() {
   return (
-    <Container className="d-flex justify-content-center" style={{ minHeight: "100vh" }}>
+    <Container
+      className="d-flex justify-content-center"
+      style={{ minHeight: "100vh" }}
+    >
       <div className="p-4 mt-5" style={{ maxWidth: "600px", width: "100%" }}>
-        
         <div className="text-center mb-4">
           <Image
             src="public\img\logo\Logo3.webp"
@@ -22,7 +24,6 @@ function Register() {
         <p className="text-center mt-3">
           ¿Ya tienes una cuenta? <a href="/login">Inicia sesión aquí</a>
         </p>
-
       </div>
     </Container>
   );

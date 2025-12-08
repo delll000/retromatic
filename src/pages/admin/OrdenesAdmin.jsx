@@ -1,9 +1,21 @@
-import { Container, Table } from 'react-bootstrap'
+import { Container, Table } from "react-bootstrap";
 
 const ordenesEjemplo = [
-  { id: 1, cliente: 'Juan Pérez', juego: 'Minecraft', total: 19990, estado: 'Completada' },
-  { id: 2, cliente: 'Ana López', juego: 'God of War Ragnarok', total: 49990, estado: 'Pendiente' },
-]
+  {
+    id: 1,
+    cliente: "Juan Pérez",
+    juego: "Minecraft",
+    total: 19990,
+    estado: "Completada",
+  },
+  {
+    id: 2,
+    cliente: "Ana López",
+    juego: "God of War Ragnarok",
+    total: 49990,
+    estado: "Pendiente",
+  },
+];
 
 function OrdenesAdmin() {
   return (
@@ -48,7 +60,7 @@ function OrdenesAdmin() {
         </Table>
       </Container>
     </main>
-  )
+  );
 }
 
-export default OrdenesAdmin
+export default OrdenesAdmin;

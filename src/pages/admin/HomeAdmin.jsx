@@ -1,5 +1,5 @@
-import { Container, Row, Col } from 'react-bootstrap'
-import Button from '../../components/atoms/Button'
+import { Container, Row, Col } from "react-bootstrap";
+import Button from "../../components/atoms/Button";
 
 function HomeAdmin() {
   return (
@@ -8,7 +8,8 @@ function HomeAdmin() {
         <header className="text-center mb-4">
           <h1>Panel de administración</h1>
           <p className="text-muted">
-            Desde aquí podrás gestionar los juegos, las órdenes y el contenido de la página principal.
+            Desde aquí podrás gestionar los juegos, las órdenes y el contenido
+            de la página principal.
           </p>
         </header>
 
@@ -57,7 +58,7 @@ function HomeAdmin() {
         </Row>
       </Container>
     </main>
-  )
+  );
 }
 
-export default HomeAdmin
+export default HomeAdmin;

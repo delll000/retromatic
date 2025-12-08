@@ -1,8 +1,7 @@
-import { Container, Card } from 'react-bootstrap'
-import Image from '../../components/atoms/Image'
-import RetroCarousel from '../../components/organisms/RetroCarousel'
-import usCarouselItems from '../../data/usCarouselItems'
-
+import { Container, Card } from "react-bootstrap";
+import Image from "../../components/atoms/Image";
+import RetroCarousel from "../../components/organisms/RetroCarousel";
+import usCarouselItems from "../../data/usCarouselItems";
 
 function Us() {
   return (
@@ -17,7 +16,7 @@ function Us() {
 
           <Card className="mt-3 p-2" id="Fondo_Us">
             <Card
-              style={{ width: '50%' }}
+              style={{ width: "50%" }}
               id="F"
               className="text-center justify-content-center mx-auto mt-1 p-1"
             >
@@ -38,7 +37,7 @@ function Us() {
               <RetroCarousel items={usCarouselItems} className="mt-4" />
 
               <Card
-                style={{ width: '50%' }}
+                style={{ width: "50%" }}
                 id="F"
                 className="text-center justify-content-center mx-auto mt-3 p-1"
               >
@@ -61,7 +60,7 @@ function Us() {
         </div>
       </div>
     </Container>
-  )
+  );
 }
 
-export default Us
+export default Us;

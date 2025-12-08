@@ -1,32 +1,33 @@
-import { useState, useEffect } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
-import Button from '../../components/atoms/Button'
-import ProductCard from '../../components/organisms/ProductCard'
-import RetroCarousel from '../../components/organisms/RetroCarousel'
-import homeCarouselItems from '../../data/homeCarouselItems'
+import React from "react";
+import { useState, useEffect } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import Button from "../../components/atoms/Button";
+import ProductCard from "../../components/organisms/ProductCard";
+import RetroCarousel from "../../components/organisms/RetroCarousel";
+import homeCarouselItems from "../../data/homeCarouselItems";
 
-const API_URL = 'https://backend-retromatic.onrender.com/v1/api'
+const API_URL = "https://backend-retromatic.onrender.com/v1/api";
 
 function Home() {
-  const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchGames = async () => {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
       try {
-        const response = await fetch(`${API_URL}/juegos`)
+        const response = await fetch(`${API_URL}/juegos`);
         if (!response.ok) {
-          throw new Error('No se pudieron cargar los juegos')
+          throw new Error("No se pudieron cargar los juegos");
         }
 
-        const data = await response.json()
+        const data = await response.json();
 
         const mapped = data.map((juego) => ({
           id: juego.id,
@@ -34,32 +35,29 @@ function Home() {
           description: juego.descripcion,
           price: juego.precio,
           image: juego.urlPortada,
-        }))
+        }));
 
-        setProducts(mapped.slice(0, 3))
+        setProducts(mapped.slice(0, 3));
       } catch (err) {
-        console.error('Error al cargar productos del home:', err)
-        setError(err.message)
+        console.error("Error al cargar productos del home:", err);
+        setError(err.message);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchGames()
-  }, [])
+    fetchGames();
+  }, []);
 
   const goToCatalog = () => {
-    navigate('/catalogo')
-  }
+    navigate("/catalogo");
+  };
 
   return (
     <main>
       <section className="py-5 bg-light">
         <Container>
-          <RetroCarousel
-            items={homeCarouselItems}
-            className="home-carousel"
-          />
+          <RetroCarousel items={homeCarouselItems} className="home-carousel" />
         </Container>
       </section>
 
@@ -85,7 +83,7 @@ function Home() {
                 xs={12}
                 md={4}
                 className="d-flex mb-4"
-                style={{ cursor: 'pointer' }}
+                style={{ cursor: "pointer" }}
                 onClick={goToCatalog}
               >
                 <ProductCard product={product} />
@@ -95,7 +93,7 @@ function Home() {
         </Container>
       </section>
     </main>
-  )
+  );
 }
 
-export default Home
+export default Home;

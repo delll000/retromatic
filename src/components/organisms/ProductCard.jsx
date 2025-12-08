@@ -1,7 +1,8 @@
-import { Card } from 'react-bootstrap'
-import Image from '../atoms/Image'
-import Button from '../atoms/Button'
-import CardBody from '../molecules/CardBody'
+import React from "react";
+import { Card } from "react-bootstrap";
+import Image from "../atoms/Image";
+import Button from "../atoms/Button";
+import CardBody from "../molecules/CardBody";
 
 function ProductCard({ product }) {
   return (
@@ -16,7 +17,7 @@ function ProductCard({ product }) {
         <Button variant="success">¡Compra aquí!</Button>
       </Card.Body>
     </Card>
-  )
+  );
 }
 
-export default ProductCard
+export default ProductCard;

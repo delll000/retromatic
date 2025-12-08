@@ -44,7 +44,7 @@ const loginData = [
         variant: "small",
         className: "text-muted",
         before: "¿No tienes cuenta? ",
-        content: "create-user-link", 
+        content: "create-user-link",
         after: "",
       },
     ],

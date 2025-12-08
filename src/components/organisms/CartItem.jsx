@@ -1,7 +1,7 @@
-import { Card } from 'react-bootstrap';
-import Image from '../atoms/Image';
-import CartItemInfo from '../molecules/CartItemInfo';
-import Button from '../atoms/Button';
+import { Card } from "react-bootstrap";
+import Image from "../atoms/Image";
+import CartItemInfo from "../molecules/CartItemInfo";
+import Button from "../atoms/Button";
 
 function CartItem({ item, index, onQuantityChange, onRemove }) {
   return (
@@ -39,11 +39,7 @@ function CartItem({ item, index, onQuantityChange, onRemove }) {
               </Button>
             </div>
 
-            <Button
-              variant="danger"
-              size="sm"
-              onClick={() => onRemove(index)}
-            >
+            <Button variant="danger" size="sm" onClick={() => onRemove(index)}>
               Eliminar
             </Button>
           </div>

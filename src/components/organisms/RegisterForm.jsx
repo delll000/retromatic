@@ -5,7 +5,6 @@ import Button from "../atoms/Button";
 const API_URL = "https://backend-retromatic.onrender.com/v1/api";
 
 function RegisterForm() {
-
   const [validated, setValidated] = useState(false);
   const [loading, setLoading] = useState(false);
   const [regionSeleccionada, setRegionSeleccionada] = useState("");
@@ -13,7 +12,7 @@ function RegisterForm() {
   const regiones = [
     { id: 1, nombre: "Región Metropolitana" },
     { id: 2, nombre: "Valparaíso" },
-    { id: 3, nombre: "Biobío" }
+    { id: 3, nombre: "Biobío" },
   ];
 
   const comunas = [
@@ -22,7 +21,7 @@ function RegisterForm() {
     { id: 3, regionId: 1, nombre: "Pudahuel" },
     { id: 4, regionId: 2, nombre: "Valparaíso" },
     { id: 5, regionId: 2, nombre: "Viña del Mar" },
-    { id: 6, regionId: 3, nombre: "Concepción" }
+    { id: 6, regionId: 3, nombre: "Concepción" },
   ];
 
   const handleSubmit = async (event) => {
@@ -47,14 +46,14 @@ function RegisterForm() {
       contrasenna: fd.get("contrasena"),
       regionId: Number(fd.get("regionId")),
       comunaId: Number(fd.get("comunaId")),
-      direccion: fd.get("direccion")
+      direccion: fd.get("direccion"),
     };
 
     try {
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -78,11 +77,15 @@ function RegisterForm() {
 
   return (
     <Form noValidate validated={validated} onSubmit={handleSubmit}>
-      
       <Row className="mb-3">
         <Form.Group as={Col} md="6">
           <Form.Label>Nombre</Form.Label>
-          <Form.Control required type="text" placeholder="Ingresar nombre" name="nombre" />
+          <Form.Control
+            required
+            type="text"
+            placeholder="Ingresar nombre"
+            name="nombre"
+          />
           <Form.Control.Feedback type="invalid">
             Ingresa tu nombre.
           </Form.Control.Feedback>
@@ -90,7 +93,12 @@ function RegisterForm() {
 
         <Form.Group as={Col} md="6">
           <Form.Label>Apellido</Form.Label>
-          <Form.Control required type="text" placeholder="Ingresar apellido" name="apellido" />
+          <Form.Control
+            required
+            type="text"
+            placeholder="Ingresar apellido"
+            name="apellido"
+          />
           <Form.Control.Feedback type="invalid">
             Ingresa tu apellido.
           </Form.Control.Feedback>
@@ -124,9 +132,13 @@ function RegisterForm() {
             value={regionSeleccionada}
             onChange={(e) => setRegionSeleccionada(e.target.value)}
           >
-            <option value="" disabled>Selecciona región</option>
+            <option value="" disabled>
+              Selecciona región
+            </option>
             {regiones.map((r) => (
-              <option key={r.id} value={r.id}>{r.nombre}</option>
+              <option key={r.id} value={r.id}>
+                {r.nombre}
+              </option>
             ))}
           </Form.Select>
           <Form.Control.Feedback type="invalid">
@@ -137,9 +149,13 @@ function RegisterForm() {
         <Form.Group as={Col} md="6">
           <Form.Label>Comuna</Form.Label>
           <Form.Select required name="comunaId" disabled={!regionSeleccionada}>
-            <option value="" disabled>Selecciona comuna</option>
+            <option value="" disabled>
+              Selecciona comuna
+            </option>
             {comunasFiltradas.map((c) => (
-              <option key={c.id} value={c.id}>{c.nombre}</option>
+              <option key={c.id} value={c.id}>
+                {c.nombre}
+              </option>
             ))}
           </Form.Select>
           <Form.Control.Feedback type="invalid">
@@ -151,7 +167,12 @@ function RegisterForm() {
       <Row className="mb-3">
         <Form.Group as={Col} md="12">
           <Form.Label>Dirección</Form.Label>
-          <Form.Control required type="text" placeholder="Ej: Calle 123" name="direccion" />
+          <Form.Control
+            required
+            type="text"
+            placeholder="Ej: Calle 123"
+            name="direccion"
+          />
           <Form.Control.Feedback type="invalid">
             Ingresa una dirección válida.
           </Form.Control.Feedback>
@@ -161,7 +182,12 @@ function RegisterForm() {
       <Row className="mb-3">
         <Form.Group as={Col} md="6">
           <Form.Label>Contraseña</Form.Label>
-          <Form.Control required type="password" placeholder="Contraseña" name="contrasena" />
+          <Form.Control
+            required
+            type="password"
+            placeholder="Contraseña"
+            name="contrasena"
+          />
           <Form.Control.Feedback type="invalid">
             Ingresa una contraseña.
           </Form.Control.Feedback>
@@ -169,7 +195,12 @@ function RegisterForm() {
 
         <Form.Group as={Col} md="6">
           <Form.Label>Teléfono</Form.Label>
-          <Form.Control required type="tel" placeholder="Ej: 987654321" name="telefono" />
+          <Form.Control
+            required
+            type="tel"
+            placeholder="Ej: 987654321"
+            name="telefono"
+          />
           <Form.Control.Feedback type="invalid">
             Ingresa un teléfono válido.
           </Form.Control.Feedback>
@@ -191,7 +222,6 @@ function RegisterForm() {
           {loading ? "Creando cuenta..." : "Crear cuenta"}
         </Button>
       </div>
-
     </Form>
   );
 }

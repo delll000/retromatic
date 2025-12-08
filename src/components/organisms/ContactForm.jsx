@@ -94,9 +94,7 @@ function ContactForm() {
         <small className="form-text text-muted">
           Nunca compartiremos tu correo con nadie ദ്ദി◝ ⩊ ◜.ᐟ.
         </small>
-        {errors.email && (
-          <div className="invalid-feedback">{errors.email}</div>
-        )}
+        {errors.email && <div className="invalid-feedback">{errors.email}</div>}
       </div>
 
       <div className="form-group mb-3">

@@ -1,101 +1,113 @@
-import { useState, useEffect } from 'react'
-import { Container, Row, Col, Form, Button as BsButton, Modal } from 'react-bootstrap'
-import CatalogProductCard from '../../components/organisms/CatalogProductCard'
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Form,
+  Button as BsButton,
+  Modal,
+} from "react-bootstrap";
+import CatalogProductCard from "../../components/organisms/CatalogProductCard";
 
-const API_URL = 'https://backend-retromatic.onrender.com/v1/api'
+const API_URL = "https://backend-retromatic.onrender.com/v1/api";
 
 function Catalogo() {
-  const [allProducts, setAllProducts] = useState([])
-  const [products, setProducts] = useState([])
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('')
-  const [platform, setPlatform] = useState('')
-  const [selectedProduct, setSelectedProduct] = useState(null)
-  const [quantity, setQuantity] = useState(1)
-  const [showModal, setShowModal] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-
-   useEffect(() => {
-    const fetchGames = async () => {
-      setLoading(true)
-      setError(null)
-
-      try {
-        const response = await fetch(`${API_URL}/juegos`)
-        if (!response.ok) {
-          throw new Error('No se pudieron cargar los juegos')
-        }
-
-        const data = await response.json()
-
-        const mapped = data.map((juego) => ({
-          id: juego.id,
-          nombre: juego.titulo,
-          descripcion: juego.descripcion,
-          precio: juego.precio,
-          imagen: juego.urlPortada,
-          categoria:
-            juego.categorias && juego.categorias.length > 0
-              ? juego.categorias[0].nombre
-              : 'Sin categoría',
-          plataforma:
-            juego.plataformas && juego.plataformas.length > 0
-              ? juego.plataformas[0].nombre
-              : 'Sin plataforma',
-        }))
-
-        setAllProducts(mapped)
-        setProducts(mapped)
-      } catch (err) {
-        console.error(err)
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchGames()
-  }, [])
+  const [allProducts, setAllProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [platform, setPlatform] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [platformOptions, setPlatformOptions] = useState([]);
 
   useEffect(() => {
-    let result = [...allProducts]
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
 
-    if (search.trim() !== '') {
-      const term = search.toLowerCase()
-      result = result.filter((p) => p.nombre.toLowerCase().includes(term))
+      try {
+        const resJuegos = await fetch(`${API_URL}/juegos`);
+        const juegosData = await resJuegos.json();
+
+        const mapped = juegosData.map((j) => ({
+          id: j.id,
+          nombre: j.titulo,
+          descripcion: j.descripcion,
+          precio: j.precio,
+          imagen: j.urlPortada,
+
+          categorias: (j.categorias || [])
+            .map((rel) => rel.categoria?.nombre)
+            .filter(Boolean),
+
+          plataformas: (j.plataformas || [])
+            .map((rel) => rel.plataforma?.nombre)
+            .filter(Boolean),
+        }));
+
+        setAllProducts(mapped);
+        setProducts(mapped);
+
+        const resCats = await fetch(`${API_URL}/categorias`);
+        const catsData = await resCats.json();
+        setCategoryOptions(catsData.map((c) => c.nombre));
+
+        const plSet = new Set();
+        mapped.forEach((j) => j.plataformas.forEach((p) => plSet.add(p)));
+        setPlatformOptions([...plSet]);
+      } catch (e) {
+        setError("No se pudieron cargar los datos");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    let result = [...allProducts];
+
+    if (search.trim() !== "") {
+      const term = search.toLowerCase();
+      result = result.filter((p) => p.nombre.toLowerCase().includes(term));
     }
 
     if (category) {
-      result = result.filter((p) => p.categoria === category)
+      result = result.filter((p) => p.categorias.includes(category));
     }
 
     if (platform) {
-      result = result.filter((p) => p.plataforma === platform)
+      result = result.filter((p) => p.plataformas.includes(platform));
     }
 
-    setProducts(result)
-  }, [search, category, platform, allProducts])
+    setProducts(result);
+  }, [search, category, platform, allProducts]);
 
   const handleOpenModal = (product) => {
-    setSelectedProduct(product)
-    setQuantity(1)
-    setShowModal(true)
-  }
+    setSelectedProduct(product);
+    setQuantity(1);
+    setShowModal(true);
+  };
 
   const handleCloseModal = () => {
-    setShowModal(false)
-    setSelectedProduct(null)
-  }
+    setShowModal(false);
+    setSelectedProduct(null);
+  };
 
   const handleAddToCart = () => {
-    if (!selectedProduct) return
-
-    const stored = JSON.parse(localStorage.getItem('carritoRetromatic') || '[]')
-    const existing = stored.find((item) => item.id === selectedProduct.id)
+    const stored = JSON.parse(
+      localStorage.getItem("carritoRetromatic") || "[]"
+    );
+    const existing = stored.find((i) => i.id === selectedProduct.id);
 
     if (existing) {
-      existing.cantidad += quantity
+      existing.cantidad += quantity;
     } else {
       stored.push({
         id: selectedProduct.id,
@@ -103,12 +115,12 @@ function Catalogo() {
         precio: selectedProduct.precio,
         imagen: selectedProduct.imagen,
         cantidad: quantity,
-      })
+      });
     }
 
-    localStorage.setItem('carritoRetromatic', JSON.stringify(stored))
-    handleCloseModal()
-  }
+    localStorage.setItem("carritoRetromatic", JSON.stringify(stored));
+    handleCloseModal();
+  };
 
   return (
     <main>
@@ -122,7 +134,7 @@ function Catalogo() {
           <Form className="mb-4">
             <Row className="g-3 align-items-end">
               <Col xs={12} md={6}>
-                <Form.Group controlId="buscador">
+                <Form.Group controlId="search">
                   <Form.Label>Buscar juego</Form.Label>
                   <Form.Control
                     type="text"
@@ -141,11 +153,11 @@ function Catalogo() {
                     onChange={(e) => setCategory(e.target.value)}
                   >
                     <option value="">Todas</option>
-                    <option value="aventura">Aventura</option>
-                    <option value="accion">Acción</option>
-                    <option value="Pelea">Pelea</option>
-                    <option value="Terror Shooter">Terror Shooter</option>
-                    <option value="Correr">Correr</option>
+                    {categoryOptions.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -158,11 +170,11 @@ function Catalogo() {
                     onChange={(e) => setPlatform(e.target.value)}
                   >
                     <option value="">Todas</option>
-                    <option value="PS5">PS5</option>
-                    <option value="PS4">PS4</option>
-                    <option value="PS2">PS2</option>
-                    <option value="Multiplataforma">Multiplataforma</option>
-                    <option value="Dreamcast">Dreamcast</option>
+                    {platformOptions.map((p) => (
+                      <option key={p} value={p}>
+                        {p}
+                      </option>
+                    ))}
                   </Form.Select>
                 </Form.Group>
               </Col>
@@ -180,9 +192,7 @@ function Catalogo() {
             ))}
 
             {!loading && !error && products.length === 0 && (
-              <p className="text-center mt-4">
-                No se encontraron juegos.
-              </p>
+              <p className="text-center mt-4">No se encontraron juegos.</p>
             )}
           </Row>
         </Container>
@@ -194,6 +204,7 @@ function Catalogo() {
             <Modal.Header closeButton>
               <Modal.Title>{selectedProduct.nombre}</Modal.Title>
             </Modal.Header>
+
             <Modal.Body>
               <Row>
                 <Col xs={12} md={6}>
@@ -203,21 +214,30 @@ function Catalogo() {
                     className="img-fluid"
                   />
                 </Col>
+
                 <Col xs={12} md={6} className="mt-3 mt-md-0">
                   <p>{selectedProduct.descripcion}</p>
                   <p className="fw-bold">${selectedProduct.precio}</p>
+
                   <p>
-                    <strong>Categoría:</strong> {selectedProduct.categoria}
+                    <strong>Categorías:</strong>
+                    {selectedProduct.categorias.length > 0
+                      ? selectedProduct.categorias.join(", ")
+                      : "Sin categoría"}
                   </p>
+
                   <p>
-                    <strong>Plataforma:</strong> {selectedProduct.plataforma}
+                    <strong>Plataformas:</strong>
+                    {selectedProduct.plataformas.length > 0
+                      ? selectedProduct.plataformas.join(", ")
+                      : "Sin plataforma"}
                   </p>
+
                   <Form.Group controlId="cantidad">
                     <Form.Label>Cantidad</Form.Label>
                     <Form.Control
                       type="number"
                       min={1}
-                      max={10}
                       value={quantity}
                       onChange={(e) =>
                         setQuantity(Math.max(1, Number(e.target.value) || 1))
@@ -227,6 +247,7 @@ function Catalogo() {
                 </Col>
               </Row>
             </Modal.Body>
+
             <Modal.Footer>
               <BsButton variant="secondary" onClick={handleCloseModal}>
                 Cancelar
@@ -239,7 +260,7 @@ function Catalogo() {
         )}
       </Modal>
     </main>
-  )
+  );
 }
 
-export default Catalogo
+export default Catalogo;

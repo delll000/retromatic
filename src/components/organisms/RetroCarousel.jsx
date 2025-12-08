@@ -1,5 +1,6 @@
-import { Carousel as BsCarousel } from 'react-bootstrap'
-import Image from '../atoms/Image'
+import React from "react";
+import { Carousel as BsCarousel } from "react-bootstrap";
+import Image from "../atoms/Image";
 
 function RetroCarousel({ items, className }) {
   return (
@@ -12,13 +13,13 @@ function RetroCarousel({ items, className }) {
           <Image
             src={item.src}
             alt={item.alt}
-            className={item.className || 'd-block w-100'}
+            className={item.className || "d-block w-100"}
             id={item.imgId}
           />
         </BsCarousel.Item>
       ))}
     </BsCarousel>
-  )
+  );
 }
 
-export default RetroCarousel
+export default RetroCarousel;

@@ -1,12 +1,11 @@
-import { useEffect, useState } from 'react';
-import { Container, Row, Col, Table } from 'react-bootstrap';
-import Button from '../../components/atoms/Button';
-import GameModal from '../../components/organisms/GameModal';
+import { useEffect, useState } from "react";
+import { Container, Row, Col, Table } from "react-bootstrap";
+import Button from "../../components/atoms/Button";
+import GameModal from "../../components/organisms/GameModal";
 
 const API_URL = "https://backend-retromatic.onrender.com/v1/api/juegos";
 
 function JuegosAdmin() {
-
   const [juegos, setJuegos] = useState([]);
   const [cargando, setCargando] = useState(true);
 
@@ -52,7 +51,6 @@ function JuegosAdmin() {
   };
 
   const guardarJuego = async (form) => {
-
     if (!form.titulo || !form.descripcion || !form.precio) {
       alert("Completa los campos obligatorios");
       return;
@@ -77,7 +75,7 @@ function JuegosAdmin() {
       categoriaIds: categorias,
       plataformaIds: [],
       modalidadIds: [],
-      companiaIds: []
+      companiaIds: [],
     };
 
     try {
@@ -92,7 +90,7 @@ function JuegosAdmin() {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body)
+        body: JSON.stringify(body),
       });
 
       const data = await res.json();
@@ -102,9 +100,7 @@ function JuegosAdmin() {
         setJuegos([...juegos, data]);
       } else {
         setJuegos(
-          juegos.map((j) =>
-            j.id === juegoEditando.id ? { ...j, ...data } : j
-          )
+          juegos.map((j) => (j.id === juegoEditando.id ? { ...j, ...data } : j))
         );
       }
 

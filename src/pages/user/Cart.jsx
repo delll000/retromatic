@@ -1,18 +1,18 @@
-import { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import CartItem from '../../components/organisms/CartItem';
-import CartSummary from '../../components/organisms/CartSummary';
+import { useEffect, useState } from "react";
+import { Container, Row, Col } from "react-bootstrap";
+import CartItem from "../../components/organisms/CartItem";
+import CartSummary from "../../components/organisms/CartSummary";
 
 function Cart() {
   const [carrito, setCarrito] = useState([]);
 
   useEffect(() => {
-    const guardado = localStorage.getItem('carritoRetromatic');
+    const guardado = localStorage.getItem("carritoRetromatic");
     if (guardado) {
       try {
         setCarrito(JSON.parse(guardado));
       } catch (e) {
-        console.error('Error parseando carrito:', e);
+        console.error("Error parseando carrito:", e);
         setCarrito([]);
       }
     }
@@ -20,7 +20,7 @@ function Cart() {
 
   const guardarCarrito = (nuevoCarrito) => {
     setCarrito(nuevoCarrito);
-    localStorage.setItem('carritoRetromatic', JSON.stringify(nuevoCarrito));
+    localStorage.setItem("carritoRetromatic", JSON.stringify(nuevoCarrito));
   };
 
   const cambiarCantidad = (index, suma) => {
@@ -48,7 +48,7 @@ function Cart() {
   const total = subtotal + envio;
 
   const procesarPago = () => {
-    alert('Pago procesado. ¡Gracias por tu compra!');
+    alert("Pago procesado. ¡Gracias por tu compra!");
     guardarCarrito([]);
   };
 

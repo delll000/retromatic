@@ -1,26 +1,27 @@
-import { useEffect, useState } from 'react'
-import { Navbar, Nav, Container } from 'react-bootstrap'
+import React from "react";
+import { useEffect, useState } from "react";
+import { Navbar, Nav, Container } from "react-bootstrap";
 
 function NavBar() {
-  const [user, setUser] = useState(null)
-  const [hover, setHover] = useState(false)
+  const [user, setUser] = useState(null);
+  const [hover, setHover] = useState(false);
 
   useEffect(() => {
-    const guardado = localStorage.getItem('user')
+    const guardado = localStorage.getItem("user");
     if (guardado) {
       try {
-        setUser(JSON.parse(guardado))
+        setUser(JSON.parse(guardado));
       } catch {
-        setUser(null)
+        setUser(null);
       }
     }
-  }, [])
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('user')
-    setUser(null)
-    window.location.href = '/'
-  }
+    localStorage.removeItem("user");
+    setUser(null);
+    window.location.href = "/";
+  };
 
   return (
     <header>
@@ -30,7 +31,7 @@ function NavBar() {
             <img
               src="/Logo3.webp"
               alt="Retromatic Logo"
-              style={{ height: '50px' }}
+              style={{ height: "50px" }}
             />
           </Navbar.Brand>
 
@@ -54,7 +55,7 @@ function NavBar() {
                   className="position-relative d-flex align-items-center"
                   onMouseEnter={() => setHover(true)}
                   onMouseLeave={() => setHover(false)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: "pointer" }}
                 >
                   <Nav.Link as="span" className="d-flex align-items-center">
                     {user.nombre}
@@ -63,26 +64,26 @@ function NavBar() {
                   {hover && (
                     <div
                       style={{
-                        position: 'absolute',
+                        position: "absolute",
                         right: 0,
-                        top: '38px',
-                        background: 'white',
-                        border: '1px solid #ddd',
-                        borderRadius: '6px',
-                        padding: '8px 0',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+                        top: "38px",
+                        background: "white",
+                        border: "1px solid #ddd",
+                        borderRadius: "6px",
+                        padding: "8px 0",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
                         zIndex: 50,
-                        minWidth: '150px'
+                        minWidth: "150px",
                       }}
                     >
-                      {user.rol === 'ADMIN' && (
+                      {user.rol === "ADMIN" && (
                         <div
                           style={{
-                            padding: '8px 15px',
-                            cursor: 'pointer',
-                            whiteSpace: 'nowrap'
+                            padding: "8px 15px",
+                            cursor: "pointer",
+                            whiteSpace: "nowrap",
                           }}
-                          onClick={() => (window.location.href = '/admin')}
+                          onClick={() => (window.location.href = "/admin")}
                         >
                           Admin dashboard
                         </div>
@@ -90,9 +91,9 @@ function NavBar() {
 
                       <div
                         style={{
-                          padding: '8px 15px',
-                          cursor: 'pointer',
-                          whiteSpace: 'nowrap'
+                          padding: "8px 15px",
+                          cursor: "pointer",
+                          whiteSpace: "nowrap",
                         }}
                         onClick={handleLogout}
                       >
@@ -102,13 +103,12 @@ function NavBar() {
                   )}
                 </div>
               )}
-
             </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
     </header>
-  )
+  );
 }
 
-export default NavBar
+export default NavBar;

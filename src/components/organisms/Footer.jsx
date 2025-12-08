@@ -1,4 +1,5 @@
-import { Container, Row, Col } from 'react-bootstrap'
+import React from "react";
+import { Container, Row, Col } from "react-bootstrap";
 
 function Footer() {
   return (
@@ -24,10 +25,7 @@ function Footer() {
                 </a>
               </li>
               <li className="mb-1">
-                <a
-                  href="/contact"
-                  className="text-white text-decoration-none"
-                >
+                <a href="/contact" className="text-white text-decoration-none">
                   Contacto
                 </a>
               </li>
@@ -42,7 +40,7 @@ function Footer() {
         </Row>
       </Container>
     </footer>
-  )
+  );
 }
 
-export default Footer
+export default Footer;

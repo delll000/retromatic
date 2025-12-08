@@ -45,7 +45,6 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(data));
 
       navigate("/");
-
     } catch (error) {
       alert("Error de conexión con el servidor.");
     } finally {
