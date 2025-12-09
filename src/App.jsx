@@ -11,7 +11,6 @@ import Login from "./pages/auth/Login.jsx";
 import Cart from "./pages/user/Cart.jsx";
 import Us from "./pages/user/Us.jsx";
 import Register from "./pages/user/Register.jsx";
-import HomeConfig from "./pages/admin/HomeConfig.jsx";
 
 function App() {
   return (
@@ -28,7 +27,6 @@ function App() {
           <Route path="/register" element={<Register />} />
           {/* Admin */}
           <Route path="/admin" element={<HomeAdmin />} />
-          <Route path="/admin/home-config" element={<HomeConfig />} />
           <Route path="/admin/juegos" element={<JuegosAdmin />} />
           <Route path="/admin/ordenes" element={<OrdenesAdmin />} />
         </Routes>

@@ -1,3 +1,4 @@
+import React from "react";
 import { Container } from "react-bootstrap";
 import Image from "../../components/atoms/Image";
 import RegisterForm from "../../components/templates/RegisterForm";

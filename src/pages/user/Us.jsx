@@ -1,3 +1,4 @@
+import React from "react";
 import { Container, Card } from "react-bootstrap";
 import Image from "../../components/atoms/Image";
 import RetroCarousel from "../../components/organisms/RetroCarousel";
@@ -25,7 +26,7 @@ function Us() {
 
             <Card.Body>
               <Card id="F">
-                <Card.Text id="Texto" className="m-3 p-3">
+                <Card.Text as="div" id="Texto" className="m-3 p-3">
                   <h2>
                     "Retromatic es más que una tienda: es un espacio creado por
                     y para gamers, donde la pasión por los videojuegos clásicos
@@ -46,7 +47,7 @@ function Us() {
             </Card.Body>
 
             <Card id="C">
-              <Card.Text id="Texto" className="m-3 p-2">
+              <Card.Text as="div" id="Texto" className="m-3 p-2">
                 <h3>
                   "En Retromatic somos un equipo de gamers y entusiastas de la
                   tecnología que combina experiencia y pasión por los
